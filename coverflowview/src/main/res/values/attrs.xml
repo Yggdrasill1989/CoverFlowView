@@ -3,6 +3,7 @@
 
     <declare-styleable name="CoverFlowView">
         <attr name="visibleViews" format="integer" />
+        <attr name="loopMode" format="boolean" />
         <!--<attr name="reflectionHeight" format="fraction" />-->
         <!--<attr name="reflectionGap" format="dimension" />-->
         <!--<attr name="topImageClickEnable" format="boolean" />-->
@@ -15,6 +16,7 @@
             <enum name="match_parent" value="0"/>
             <enum name="wrap_content" value="1"/>
         </attr>
+        <attr name="scaleRatio" format="fraction" />
     </declare-styleable>
 
 </resources>

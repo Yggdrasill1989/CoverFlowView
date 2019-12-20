@@ -65,6 +65,32 @@ public class MainActivity extends AppCompatActivity {
         tabl.setupWithViewPager(vp);
     }
 
+    public void vp1Clicker(View v) {
+        int paddingTop = coverflow_view.getPaddingTop();
+        int paddingBottom = coverflow_view.getPaddingBottom();
+        int paddingLeft = coverflow_view.getPaddingLeft();
+        int paddingRight = coverflow_view.getPaddingRight();
+        int maxPadding = 250;
+        int minPadding = -300;
+        int stepPadding = 50;
+        switch (v.getId()) {
+            case R.id.button:
+                paddingLeft += stepPadding;
+                paddingLeft = Math.min(maxPadding, Math.max(minPadding, paddingLeft));
+                paddingRight += stepPadding;
+                paddingRight = Math.min(maxPadding, Math.max(minPadding, paddingRight));
+                coverflow_view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+                break;
+            case R.id.button2:
+                paddingLeft -= stepPadding;
+                paddingLeft = Math.min(maxPadding, Math.max(minPadding, paddingLeft));
+                paddingRight -= stepPadding;
+                paddingRight = Math.min(maxPadding, Math.max(minPadding, paddingRight));
+                coverflow_view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+                break;
+        }
+    }
+
     public void vp2Clicker(View v) {
         switch (v.getId()) {
             case R.id.button:
@@ -80,7 +106,11 @@ public class MainActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.button:
                 if(adapter != null) {
-                    adapter.setTips(new int[]{R.string.new_cover_tip0, R.string.new_cover_tip1, R.string.new_cover_tip2, R.string.new_cover_tip3, R.string.new_cover_tip4});
+                    if (adapter.getTips() == MyCoverFlowAdapter.InitialTips) {
+                        adapter.setTips(MyCoverFlowAdapter.NewTips);
+                    } else {
+                        adapter.setTips(MyCoverFlowAdapter.InitialTips);
+                    }
                     adapter.notifyDataSetChanged();
                 }
                 break;

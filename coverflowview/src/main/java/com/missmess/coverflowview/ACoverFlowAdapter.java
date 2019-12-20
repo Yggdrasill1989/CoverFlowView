@@ -5,6 +5,9 @@ import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 public abstract class ACoverFlowAdapter<T extends ACoverFlowAdapter.ViewHolder> {
     private final DataSetObservable mDataSetObservable = new DataSetObservable();
 
@@ -16,8 +19,18 @@ public abstract class ACoverFlowAdapter<T extends ACoverFlowAdapter.ViewHolder> 
         mDataSetObservable.unregisterObserver(observer);
     }
 
+    /**
+     * CoverFlowView数据集发生改变，刷新，尽量保留状态且不影响滑动事件
+     */
     public void notifyDataSetChanged() {
         mDataSetObservable.notifyChanged();
+    }
+
+    /**
+     * CoverFlowView重绘刷新。重置CoverFlowView的所有状态。
+     */
+    public void notifyDataSetInvalidated() {
+        mDataSetObservable.notifyInvalidated();
     }
 
     public Object getItem(int position){
@@ -32,11 +45,17 @@ public abstract class ACoverFlowAdapter<T extends ACoverFlowAdapter.ViewHolder> 
         T holder;
         int itemViewType = getItemViewType(position);
         if(convertView != null) {
-            holder = (T) convertView.getTag();
-            int cPos = holder.position;
-            if(getItemViewType(cPos) == itemViewType) {
-                onBindViewHolder(holder, position);
-                return holder.getItemView();
+            Object tag = convertView.getTag();
+            // 当前adapter的泛型类型T
+            Type destType = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+            // 验证tag是否是T的实例，如果是，直接使用
+            if (((Class) destType).isInstance(tag)) {
+                holder = (T) tag;
+                int cPos = holder.position;
+                if(getItemViewType(cPos) == itemViewType) {
+                    onBindViewHolder(holder, position);
+                    return holder.getItemView();
+                }
             }
         }
 
